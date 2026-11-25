@@ -3,6 +3,13 @@
 	"EngineAssociation": "{0E91E5A0-47AB-13DA-2093-609B1E8B4EAD}",
 	"Category": "",
 	"Description": "",
+	"Modules": [
+		{
+			"Name": "TopDownPrototype",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
 	"Plugins": [
 		{
 			"Name": "ModelingToolsEditorMode",
