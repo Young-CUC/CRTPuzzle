@@ -7,6 +7,7 @@
 #include "AnimNodes/AnimNode_Slot.h"
 #include "GameFramework/Character.h"
 #include "PlayerActionComponent.h"
+#include "RangedGuard.h"
 
 const FName UPlayerLocomotionAnimInstance::FullBodySlot(TEXT("DefaultSlot"));
 
@@ -119,6 +120,14 @@ namespace
             {
                 return;
             }
+            const bool bMoving = Character->GetVelocity().SizeSquared2D() > FMath::Square(8.f);
+            if (const ARangedGuard* Guard = Cast<ARangedGuard>(Character))
+            {
+                Locomotion.Players[4].SetSequence(Guard->PistolIdle);
+                Locomotion.Players[5].SetSequence(Guard->PistolMove);
+                Locomotion.RequestedPose = bMoving ? 5 : 4;
+                return;
+            }
             const UPlayerActionComponent* Actions = Character->FindComponentByClass<UPlayerActionComponent>();
             if (!Actions)
             {
@@ -132,7 +141,6 @@ namespace
             {
                 Locomotion.Players[Index].SetSequence(Sequences[Index] ? Sequences[Index] : Sequences[0]);
             }
-            const bool bMoving = Character->GetVelocity().SizeSquared2D() > FMath::Square(8.f);
             Locomotion.RequestedPose = (Actions->HasPistol() ? 4 : 0)
                 + (Character->bIsCrouched ? 2 : 0) + (bMoving ? 1 : 0);
             Locomotion.BlendTime = Actions->LocomotionBlendTime;
